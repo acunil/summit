@@ -38,7 +38,6 @@
     "@tanstack/react-router": "^1.131.44",
     "@tanstack/react-router-devtools": "^1.131.44",
     "@tanstack/router-plugin": "^1.131.44",
-    "@theme-toggles/react": "^4.1.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "tailwindcss": "^4.1.13",
