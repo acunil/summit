@@ -18,6 +18,7 @@ export const Game: React.FC = () => {
   const [durationMs, setDurationMs] = useState<number | null>(null);
   const [startSignal, setStartSignal] = useState<number>(Date.now());
   const [pendingFinish, setPendingFinish] = useState(false);
+  const [started, setStarted] = useState(false);
 
   const currentQuestion = questions[currentIndex];
 
@@ -47,18 +48,29 @@ export const Game: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-0 p-4">
-      <h1 className="text-3xl font-bold mb-6">🏔️ Summit</h1>
-
-      {!finished ? (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-black p-4">
+      {!started ? (
+        <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white p-4">
+          <h1 className="text-5xl font-bold mb-6">🏔️ Summit</h1>
+          <button
+            type="button"
+            onClick={() => {
+              setStarted(true);
+              setStartSignal(Date.now());
+            }}
+            className="bg-purple-600 px-6 py-3 rounded text-xl hover:bg-purple-700"
+          >
+            Start
+          </button>
+        </div>
+      ) : !finished ? (
         <>
-          {(!finished || pendingFinish) && (
-            <GameTimer
-              startSignal={startSignal}
-              running={!pendingFinish}
-              onFinish={(ms) => setDurationMs(ms)}
-            />
-          )}
+          <h1 className="text-3xl font-bold mb-6">🏔️ Summit</h1>
+          <GameTimer
+            startSignal={startSignal}
+            running={!pendingFinish}
+            onFinish={(ms) => setDurationMs(ms)}
+          />
           <QuestionForm
             question={currentQuestion.question}
             userAnswer={userAnswer}
@@ -70,6 +82,7 @@ export const Game: React.FC = () => {
         </>
       ) : (
         <>
+          <h1 className="text-3xl font-bold mb-6">🏔️ Summit</h1>
           <ResultsList
             questions={questions}
             userAnswers={userAnswers}
@@ -86,6 +99,7 @@ export const Game: React.FC = () => {
               setFinished(false);
               setDurationMs(null);
               setStartSignal(Date.now());
+              setStarted(false);
             }}
           />
         </>
