@@ -5,7 +5,7 @@ import { useState } from 'react';
 function generateQuestions(): Array<{ question: string; answer: number }> {
   const questions = [];
   for (let i = 1; i <= 10; i++) {
-    const max = i * 10; // Difficulty increases with each question
+    const max = i * 10;
     const a = Math.floor(Math.random() * max);
     const b = Math.floor(Math.random() * max);
     questions.push({
@@ -17,9 +17,10 @@ function generateQuestions(): Array<{ question: string; answer: number }> {
 }
 
 export const Game: React.FC = () => {
-  const [questions] = useState(generateQuestions());
+  const [questions, setQuestions] = useState(generateQuestions());
   const [currentIndex, setCurrentIndex] = useState(0);
   const [userAnswer, setUserAnswer] = useState('');
+  const [userAnswers, setUserAnswers] = useState<Array<number>>([]);
   const [score, setScore] = useState(0);
   const [finished, setFinished] = useState(false);
 
@@ -28,9 +29,13 @@ export const Game: React.FC = () => {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const numericAnswer = parseInt(userAnswer, 10);
+    const updatedAnswers = [...userAnswers, numericAnswer];
+    setUserAnswers(updatedAnswers);
+
     if (numericAnswer === currentQuestion.answer) {
       setScore(score + 1);
     }
+
     setUserAnswer('');
     if (currentIndex + 1 < questions.length) {
       setCurrentIndex(currentIndex + 1);
@@ -69,9 +74,57 @@ export const Game: React.FC = () => {
       ) : (
         <div className="text-center">
           <h2 className="text-2xl font-semibold mb-2">Game Over 🎉</h2>
-          <p className="text-lg">
+          <p className="text-lg mb-4">
             Your score: {score} / {questions.length}
           </p>
+
+          <div className="text-left inline-block">
+            <h3 className="text-xl font-semibold mb-2">Your Answers:</h3>
+            <ul className="space-y-1">
+              {questions.map((q, idx) => {
+                const userAns = userAnswers[idx];
+                const isCorrect = userAns === q.answer;
+                return (
+                  <li
+                    key={q.question}
+                    className="text-white flex items-center gap-2"
+                  >
+                    <span>{isCorrect ? '✅' : '❌'}</span>
+                    <span>
+                      {q.question} ={' '}
+                      <span
+                        className={
+                          isCorrect ? 'text-green-500' : 'text-red-500'
+                        }
+                      >
+                        {userAns}
+                      </span>{' '}
+                      {!isCorrect && (
+                        <span className="text-white">({q.answer})</span>
+                      )}
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+
+          <div className="mt-6">
+            <button
+              type="button"
+              onClick={() => {
+                setQuestions(generateQuestions()); // regenerate new questions
+                setCurrentIndex(0);
+                setUserAnswer('');
+                setUserAnswers([]);
+                setScore(0);
+                setFinished(false);
+              }}
+              className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700"
+            >
+              Play Again
+            </button>
+          </div>
         </div>
       )}
     </div>
