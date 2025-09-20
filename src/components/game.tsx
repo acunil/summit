@@ -3,6 +3,7 @@ import { useState } from 'react';
 
 import { generateQuestions } from '@/utils/generate-questions';
 
+import { PlayAgainButton } from './play-again-button';
 import { QuestionForm } from './question-form';
 import { ResultsList } from './results-list';
 
@@ -54,22 +55,16 @@ export const Game: React.FC = () => {
             userAnswers={userAnswers}
             score={score}
           />
-          <div className="mt-6">
-            <button
-              type="button"
-              onClick={() => {
-                setQuestions(generateQuestions());
-                setCurrentIndex(0);
-                setUserAnswer('');
-                setUserAnswers([]);
-                setScore(0);
-                setFinished(false);
-              }}
-              className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700"
-            >
-              Play Again
-            </button>
-          </div>
+          <PlayAgainButton
+            onClick={() => {
+              setQuestions(generateQuestions());
+              setCurrentIndex(0);
+              setUserAnswer('');
+              setUserAnswers([]);
+              setScore(0);
+              setFinished(false);
+            }}
+          />
         </>
       )}
     </div>
