@@ -9,16 +9,23 @@ interface ResultsListProps {
   questions: Array<Question>;
   userAnswers: Array<number>;
   score: number;
+  durationMs: number | null;
 }
 
 export const ResultsList: React.FC<ResultsListProps> = ({
   questions,
   userAnswers,
   score,
+  durationMs,
 }) => {
   return (
     <div className="text-center">
       <h2 className="text-2xl font-semibold mb-2">Game Over 🎉</h2>
+      {durationMs !== null && (
+        <p className="text-md text-white font-mono font-bold mt-4">
+          Time:{(durationMs / 1000).toFixed(2)}s
+        </p>
+      )}
       <p className="text-lg mb-4">
         Your score: {score} / {questions.length}
       </p>

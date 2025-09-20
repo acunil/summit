@@ -1,5 +1,5 @@
 import type React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { generateQuestions } from '@/utils/generate-questions';
 
@@ -17,8 +17,16 @@ export const Game: React.FC = () => {
   const [finished, setFinished] = useState(false);
   const [durationMs, setDurationMs] = useState<number | null>(null);
   const [startSignal, setStartSignal] = useState<number>(Date.now());
+  const [pendingFinish, setPendingFinish] = useState(false);
 
   const currentQuestion = questions[currentIndex];
+
+  useEffect(() => {
+    if (pendingFinish && durationMs !== null) {
+      setFinished(true);
+      setPendingFinish(false);
+    }
+  }, [pendingFinish, durationMs]);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -34,7 +42,7 @@ export const Game: React.FC = () => {
     if (currentIndex + 1 < questions.length) {
       setCurrentIndex(currentIndex + 1);
     } else {
-      setFinished(true);
+      setPendingFinish(true);
     }
   }
 
@@ -44,11 +52,13 @@ export const Game: React.FC = () => {
 
       {!finished ? (
         <>
-          <GameTimer
-            startSignal={startSignal}
-            running={!finished}
-            onFinish={(ms) => setDurationMs(ms)}
-          />
+          {(!finished || pendingFinish) && (
+            <GameTimer
+              startSignal={startSignal}
+              running={!pendingFinish}
+              onFinish={(ms) => setDurationMs(ms)}
+            />
+          )}
           <QuestionForm
             question={currentQuestion.question}
             userAnswer={userAnswer}
@@ -60,19 +70,11 @@ export const Game: React.FC = () => {
         </>
       ) : (
         <>
-          {durationMs !== null && (
-            <p className="text-sm text-gray-400 mt-2">
-              Time taken: {Math.floor(durationMs / 1000)}.
-              {Math.floor(durationMs % 1000)
-                .toString()
-                .padStart(3, '0')}
-              s
-            </p>
-          )}
           <ResultsList
             questions={questions}
             userAnswers={userAnswers}
             score={score}
+            durationMs={durationMs}
           />
           <PlayAgainButton
             onClick={() => {
