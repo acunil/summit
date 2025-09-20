@@ -16,6 +16,7 @@ export const Game: React.FC = () => {
   const [score, setScore] = useState(0);
   const [finished, setFinished] = useState(false);
   const [durationMs, setDurationMs] = useState<number | null>(null);
+  const [startSignal, setStartSignal] = useState<number>(Date.now());
 
   const currentQuestion = questions[currentIndex];
 
@@ -43,7 +44,11 @@ export const Game: React.FC = () => {
 
       {!finished ? (
         <>
-          <GameTimer running={!finished} onFinish={(ms) => setDurationMs(ms)} />
+          <GameTimer
+            startSignal={startSignal}
+            running={!finished}
+            onFinish={(ms) => setDurationMs(ms)}
+          />
           <QuestionForm
             question={currentQuestion.question}
             userAnswer={userAnswer}
@@ -77,6 +82,8 @@ export const Game: React.FC = () => {
               setUserAnswers([]);
               setScore(0);
               setFinished(false);
+              setDurationMs(null);
+              setStartSignal(Date.now());
             }}
           />
         </>
