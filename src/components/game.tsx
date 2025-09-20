@@ -3,6 +3,7 @@ import { useState } from 'react';
 
 import { generateQuestions } from '@/utils/generate-questions';
 
+import { GameTimer } from './game-timer';
 import { PlayAgainButton } from './play-again-button';
 import { QuestionForm } from './question-form';
 import { ResultsList } from './results-list';
@@ -14,6 +15,7 @@ export const Game: React.FC = () => {
   const [userAnswers, setUserAnswers] = useState<Array<number>>([]);
   const [score, setScore] = useState(0);
   const [finished, setFinished] = useState(false);
+  const [durationMs, setDurationMs] = useState<number | null>(null);
 
   const currentQuestion = questions[currentIndex];
 
@@ -40,16 +42,28 @@ export const Game: React.FC = () => {
       <h1 className="text-3xl font-bold mb-6">🏔️ Summit</h1>
 
       {!finished ? (
-        <QuestionForm
-          question={currentQuestion.question}
-          userAnswer={userAnswer}
-          onChange={setUserAnswer}
-          onSubmit={handleSubmit}
-          currentIndex={currentIndex}
-          totalQuestions={questions.length}
-        />
+        <>
+          <GameTimer running={!finished} onFinish={(ms) => setDurationMs(ms)} />
+          <QuestionForm
+            question={currentQuestion.question}
+            userAnswer={userAnswer}
+            onChange={setUserAnswer}
+            onSubmit={handleSubmit}
+            currentIndex={currentIndex}
+            totalQuestions={questions.length}
+          />
+        </>
       ) : (
         <>
+          {durationMs !== null && (
+            <p className="text-sm text-gray-400 mt-2">
+              Time taken: {Math.floor(durationMs / 1000)}.
+              {Math.floor(durationMs % 1000)
+                .toString()
+                .padStart(3, '0')}
+              s
+            </p>
+          )}
           <ResultsList
             questions={questions}
             userAnswers={userAnswers}
