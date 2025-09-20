@@ -1,9 +1,9 @@
-import type React from 'react';
+import { useEffect, useRef } from 'react';
 
 interface QuestionFormProps {
   question: string;
   userAnswer: string;
-  onChange: (val: string) => void;
+  onChange: (value: string) => void;
   onSubmit: (e: React.FormEvent) => void;
   currentIndex: number;
   totalQuestions: number;
@@ -17,23 +17,39 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
   currentIndex,
   totalQuestions,
 }) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = () => {
+      inputRef.current?.focus();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   return (
-    <form onSubmit={onSubmit} className="w-full max-w-sm">
-      <div className="mb-4 text-xl text-center">
+    <form onSubmit={onSubmit} className="flex flex-col items-center">
+      <p className="mb-2 text-lg text-white">
         Question {currentIndex + 1} of {totalQuestions}
-      </div>
-      <div className="mb-4 text-2xl text-center font-mono">{question}</div>
+      </p>
+      <p className="mb-4 text-2xl text-white font-bold">{question}</p>
       <input
+        ref={inputRef}
         type="number"
+        required
+        inputMode="numeric"
+        pattern="[0-9]*"
         value={userAnswer}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full p-2 border rounded mb-4 text-lg"
-        placeholder="Your answer"
-        required
+        className="text-center text-2xl px-4 py-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 w-32"
       />
       <button
         type="submit"
-        className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
+        className="mt-4 bg-purple-600 px-6 py-2 rounded text-white text-lg hover:bg-purple-700"
       >
         Submit
       </button>
