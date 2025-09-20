@@ -3,11 +3,11 @@ import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 
 import { Layout } from '@/lib/layout';
 
-const title = 'Vite React Tailwind Starter';
-const description = 'app starter template';
+const title = 'Summit App';
+const description = 'mental arithmetic training app';
 const url = 'https://vite-react-tailwind-starter.sznm.dev';
 const ogImgUrl =
-  'https://og.sznm.dev/api/generate?heading=vite-react-tailwind-starter&text=React+vite+template+with+TailwindCSS+and+TypeScript+setup.&template=color';
+  'https://em-content.zobj.net/source/apple/419/snow-capped-mountain_1f3d4-fe0f.png';
 
 export const Route = createRootRoute({
   head: () => ({
