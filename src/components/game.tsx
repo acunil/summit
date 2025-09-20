@@ -1,7 +1,7 @@
 import type React from 'react';
 import { useState } from 'react';
 
-import { generateQuestions } from '@/utils/generateQuestions';
+import { generateQuestions } from '@/utils/generate-questions';
 
 import { QuestionForm } from './question-form';
 import { ResultsList } from './results-list';
