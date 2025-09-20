@@ -7,6 +7,7 @@ import { GameTimer } from './game-timer';
 import { PlayAgainButton } from './play-again-button';
 import { QuestionForm } from './question-form';
 import { ResultsList } from './results-list';
+import { StartScreen } from './start-screen';
 
 export const Game: React.FC = () => {
   const [questions, setQuestions] = useState(generateQuestions());
@@ -48,21 +49,14 @@ export const Game: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-black p-4">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 p-4">
       {!started ? (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white p-4">
-          <h1 className="text-5xl font-bold mb-6">🏔️ Summit</h1>
-          <button
-            type="button"
-            onClick={() => {
-              setStarted(true);
-              setStartSignal(Date.now());
-            }}
-            className="bg-purple-600 px-6 py-3 rounded text-xl hover:bg-purple-700"
-          >
-            Start
-          </button>
-        </div>
+        <StartScreen
+          onStart={() => {
+            setStarted(true);
+            setStartSignal(Date.now());
+          }}
+        />
       ) : !finished ? (
         <>
           <h1 className="text-3xl font-bold mb-6">🏔️ Summit</h1>
